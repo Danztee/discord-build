@@ -8,30 +8,31 @@ datasource db {
 }
 
 model Profile {
-  id String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @unique
-  name String
-  imageUrl String
-  email String
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  username  String
+  imageUrl  String?
+  email     String @unique
+  password  String
 
-  servers Server[]
-  members Member[]
-  channel Channel[]
+  servers   Server[]
+  members   Member[]
+  channels  Channel[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }
 
+
 model Server {
-  id String  @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-  imageUrl String
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  imageUrl   String
   inviteCode String
 
-  profileId String
-  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId String  @db.ObjectId
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-  members Member[]
+  members  Member[]
   channels Channel[]
 
   createdAt DateTime @default(now())
@@ -47,14 +48,14 @@ enum MemberRole {
 }
 
 model Member {
-  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  id   String     @id @default(auto()) @map("_id") @db.ObjectId
   role MemberRole @default(GUEST)
 
-  profileId String 
-  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId String  @db.ObjectId
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   serverId String
-  server Server @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  server   Server @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -70,22 +71,19 @@ enum ChannelType {
 }
 
 model Channel {
-   id String  @id @default(auto()) @map("_id") @db.ObjectId
-   name String
-   type ChannelType @default(TEXT)
+  id   String      @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  type ChannelType @default(TEXT)
 
-  profileId String 
-  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId String  @db.ObjectId
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-
-   serverId String
-  server Server @relation(fields: [profileId], references: [id], onDelete: Cascade)
-
+  serverId String
+  server   Server @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
-  
-    @@index([profileId])
+  @@index([profileId])
   @@index([serverId])
 }
