@@ -13,7 +13,7 @@ type NavigationSidebarProps = {};
 const NavigationSidebar: React.FC<NavigationSidebarProps> = async () => {
   const profile = await currentProfile();
 
-  if (!profile) return redirect("/");
+  if (!profile) return redirect("/login");
 
   const servers = await db.server.findMany({
     where: {
