@@ -8,26 +8,25 @@ datasource db {
 }
 
 model Profile {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
-  username  String
-  imageUrl  String?
-  email     String @unique
-  password  String
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  username String
+  imageUrl String?
+  email    String  @unique
+  password String
 
-  servers   Server[]
-  members   Member[]
-  channels  Channel[]
+  servers  Server[]
+  members  Member[]
+  channels Channel[]
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
-
 
 model Server {
   id         String @id @default(auto()) @map("_id") @db.ObjectId
   name       String
   imageUrl   String
-  inviteCode String
+  inviteCode String @unique
 
   profileId String  @db.ObjectId
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
@@ -36,7 +35,7 @@ model Server {
   channels Channel[]
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([profileId])
 }
@@ -54,11 +53,11 @@ model Member {
   profileId String  @db.ObjectId
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-  serverId String
-  server   Server @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  serverId String @db.ObjectId
+  server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([profileId])
   @@index([serverId])
@@ -78,11 +77,11 @@ model Channel {
   profileId String  @db.ObjectId
   profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-  serverId String
-  server   Server @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  serverId String @db.ObjectId
+  server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([profileId])
   @@index([serverId])

@@ -3,6 +3,8 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Open_Sans, Noto_Sans } from "next/font/google";
 import { cn } from "@/lib/utils";
+import ModalProvider from "@/components/providers/modal-provider";
+import { Toaster } from "react-hot-toast";
 
 const font = Noto_Sans({ subsets: ["latin"], weight: "400" });
 
@@ -18,13 +20,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(font.className, "bg-white dark:bg-[#2B2D31]")}>
+      <body className={cn("", "bg-white dark:bg-[#2B2D31]")}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem={false}
           storageKey="discord-theme"
         >
+          <ModalProvider />
+          <Toaster />
           {children}
         </ThemeProvider>
       </body>

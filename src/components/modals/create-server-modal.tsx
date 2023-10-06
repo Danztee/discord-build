@@ -1,7 +1,12 @@
 "use client";
 import * as z from "zod";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import FileUpload from "../file-upload";
+import { Button } from "../ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,8 +14,6 @@ import {
   DialogFooter,
   DialogHeader,
 } from "../ui/dialog";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -19,21 +22,22 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useModal } from "@/hooks/use-modal-store";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "server name is required" }),
   imageUrl: z.string().min(1, { message: "server image is required" }),
 });
 
-export const InitialModal = () => {
-  const [isClient, setIsClient] = useState(false);
+export const CreateServerModal = () => {
+  const { isOpen, onClose, type } = useModal();
+  const router = useRouter();
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const isModalOpen = isOpen && type === "createServer";
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -46,16 +50,28 @@ export const InitialModal = () => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    try {
+      const res = await axios.post("/api/servers", values);
+      console.log(res);
+
+      form.reset();
+      router.refresh();
+      onClose();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  if (!isClient) return null;
+  const handleClose = () => {
+    form.reset();
+    onClose();
+  };
 
   return (
-    <Dialog open>
+    <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogContent className="bg-[#fff] text-black p-0 overflow-hidden !w-[28rem]">
         <DialogHeader className="pt-8 px-6">
-          <DialogTitle className="text-2xl text-center font-bold text-[#060607]">
+          <DialogTitle className="text-[1.3rem] text-center font-bold text-[#060607]">
             Customise your server
           </DialogTitle>
           <DialogDescription className="text-center text-[#4E5058]">
@@ -72,7 +88,22 @@ export const InitialModal = () => {
           >
             <div className="space-y-8 px-6">
               <div className="flex justify-center items-center text-center">
-                TODO: image upload
+                <FormField
+                  control={form.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FileUpload
+                          endpoint="serverFileImage"
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <FormField

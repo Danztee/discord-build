@@ -1,4 +1,4 @@
-import { InitialModal } from "@/components/modals/iniital-modal";
+import { InitialModal } from "@/components/modals/create-server-modal";
 import { db } from "@/lib/db";
 import { initialProfile } from "@/lib/initial-profile";
 import { redirect } from "next/navigation";
@@ -11,7 +11,7 @@ const Page = async () => {
     where: {
       members: {
         some: {
-          profile: profile,
+          profileId: profile.id,
         },
       },
     },

@@ -6,7 +6,6 @@ import React, { useState } from "react";
 
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
 
 const Page = () => {
   const router = useRouter();
@@ -31,6 +30,7 @@ const Page = () => {
     } else {
       alert("logged in successfully");
       router.push("/");
+      router.refresh();
     }
 
     setLoading(false);
@@ -89,24 +89,23 @@ const Page = () => {
               />
             </div>
 
-            <div className="">
-              <Button
-                className="w-full bg-[#5865f2] rounded-sm hover:bg-[#5865f2] hover:opacity-70 h-[3rem] text-white"
-                type="submit"
-              >
-                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Log in
-              </Button>
+            <Button
+              variant="primary"
+              type="submit"
+              loading={loading}
+              className="w-full"
+            >
+              Log in
+            </Button>
 
-              <div className="flex items-center gap-1 mt-4 text-[12px]">
-                <p className="text-[#949bac]">Need an account?</p>{" "}
-                <Link
-                  href="/register"
-                  className="text-[#00a8fc] hover:underline text-[12px]"
-                >
-                  Register
-                </Link>
-              </div>
+            <div className="flex items-center gap-1 mt-4 text-[12px]">
+              <p className="text-[#949bac]">Need an account?</p>{" "}
+              <Link
+                href="/register"
+                className="text-[#00a8fc] hover:underline text-[12px]"
+              >
+                Register
+              </Link>
             </div>
           </div>
         </div>

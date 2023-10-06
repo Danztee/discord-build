@@ -1,11 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import React from "react";
-import { db } from "@/lib/db";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 
 const Page = () => {
   const [formData, setFormData] = useState({
@@ -14,8 +12,13 @@ const Page = () => {
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const res = await fetch("/api/register", {
@@ -28,17 +31,13 @@ const Page = () => {
 
       const data = await res.json();
 
-      console.log(data);
       alert(data.message);
 
-      // if (res.ok) {
-      //   alert("User created successfully");
-      // } else {
-      //
-      //   alert(`Error: ${data.message}`);
-      // }
+      router.push("/");
     } catch (error) {
       console.error("Error submitting form:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,23 +63,6 @@ const Page = () => {
           </div>
 
           <div className="flex flex-col gap-6">
-            {/* Email Input */}
-            <div className="flex flex-col gap-2">
-              <label
-                htmlFor="email"
-                className="text-[#B5BAC1] text-[12px] uppercase font-bold"
-              >
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="input-field p-[10px] h-[40px] w-full rounded-[3px] outline-none border-none bg-[#1E1F22] text-[#fff] text-[12px]"
-              />
-            </div>
-
             {/* Username Input */}
             <div className="flex flex-col gap-2">
               <label
@@ -93,6 +75,23 @@ const Page = () => {
                 id="username"
                 type="text"
                 value={formData.username}
+                onChange={handleInputChange}
+                className="input-field p-[10px] h-[40px] w-full rounded-[3px] outline-none border-none bg-[#1E1F22] text-[#fff] text-[12px]"
+              />
+            </div>
+
+            {/* Email Input */}
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="email"
+                className="text-[#B5BAC1] text-[12px] uppercase font-bold"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={formData.email}
                 onChange={handleInputChange}
                 className="input-field p-[10px] h-[40px] w-full rounded-[3px] outline-none border-none bg-[#1E1F22] text-[#fff] text-[12px]"
               />
@@ -116,10 +115,7 @@ const Page = () => {
             </div>
 
             {/* Register Button */}
-            <Button
-              type="submit"
-              className="w-full bg-[#5865f2] rounded-sm hover:bg-[#5865f2] hover:opacity-70 h-[3rem] text-white"
-            >
+            <Button type="submit" variant="primary" loading={loading}>
               Register
             </Button>
 
