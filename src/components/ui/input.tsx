@@ -11,7 +11,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, variant, ...props }, ref) => {
     const bgColorClass =
       variant === "dark"
-        ? "bg-dark-background"
+        ? "bg-[#1E1F22] text-[#fff] outline-none border-none"
         : "bg-zinc-300/50 text-black border-white";
 
     return (

@@ -7,7 +7,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
         <NavigationSidebar />
       </div>
 
-      <main className="md:pl-[72px] h-full"> {children}</main>
+      <main className="md:pl-[72px] h-full">{children}</main>
     </div>
   );
 };

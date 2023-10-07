@@ -20,7 +20,7 @@ const NavigationItem: React.FC<NavigationItemProps> = ({
   const params = useParams();
   const router = useRouter();
 
-  const onClick = () => router.push(`/servers/${id}`);
+  const onClick = () => router.push(`/channels/${id}`);
 
   return (
     <ActionTooltip side="right" align="center" label={name}>

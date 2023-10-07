@@ -7,6 +7,7 @@ import { Separator } from "../ui/separator";
 import { ScrollArea } from "../ui/scroll-area";
 import NavigationItem from "./navigation-item";
 import { ModeToggle } from "../mode-toggle";
+import NavigationMe from "./navigation-me";
 
 type NavigationSidebarProps = {};
 
@@ -27,7 +28,7 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = async () => {
 
   return (
     <div className="space-y-4 flex flex-col items-center h-full text-primary w-full bg-[#1E1F22] py-3">
-      <NavigationAction />
+      <NavigationMe />
       <Separator className="h-[2px] bg-zinc-700 rounded-md w-10 mx-auto" />
 
       <ScrollArea className="flex-1 w-full">
@@ -40,10 +41,8 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = async () => {
             />
           </div>
         ))}
+        <NavigationAction />
       </ScrollArea>
-      {/* <div className="pb-3 mt-auto flex items-center flex-col gap-y-4">
-        <ModeToggle />
-      </div> */}
     </div>
   );
 };

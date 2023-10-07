@@ -1,35 +1,15 @@
 "use client";
-import * as z from "zod";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import FileUpload from "../file-upload";
+import { useState } from "react";
 import { Button } from "../ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-} from "../ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
+import { Dialog, DialogContent, DialogHeader } from "../ui/dialog";
 import { Input } from "../ui/input";
 
-import axios from "axios";
-import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
-import { Label } from "../ui/label";
-import { Check, Copy, RefreshCw } from "lucide-react";
 import { useOrigin } from "@/hooks/use-origin";
+import axios from "axios";
+import { Label } from "../ui/label";
 
 export const InviteModal = () => {
   const { onOpen, isOpen, onClose, type, data } = useModal();
@@ -50,7 +30,7 @@ export const InviteModal = () => {
 
     setTimeout(() => {
       setCopied(false);
-    }, 1000);
+    }, 1500);
   };
 
   const onNew = async () => {
@@ -69,41 +49,38 @@ export const InviteModal = () => {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-[#fff] text-black p-0 overflow-hidden !w-[28rem]">
+      <DialogContent className="bg-[#313338] text-white p-0 overflow-hidden !w-[28rem]">
         <DialogHeader className="pt-8 px-6">
-          <DialogTitle className="text-[1.3rem] text-center font-bold text-[#060607]">
-            Invite Friends
+          <DialogTitle className="text-sm text-start">
+            Invite Friends to {server?.name}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="p-6">
-          <Label className="uppercase text-xs font-bold text-secondary/70">
-            Server invite link
+        <div className="px-6 pb-6">
+          <Label className="uppercase text-xs font-bold text-[#B5BAC1]">
+            SEND A SERVER INVITE LINK TO A FRIEND
           </Label>
-          <div className="flex items-center mt-2 gap-x-2">
-            <Input
-              variant="light"
-              defaultValue={inviteUrl}
-              disabled={isLoading}
-            />
-            <Button size="icon" onClick={onCopy} disabled={isLoading}>
-              {copied ? (
-                <Check className="w-4 h-4" />
-              ) : (
-                <Copy className="w-4 h-4" />
-              )}
+          <div className="flex items-center mt-2 gap-x-2 relative">
+            <Input variant="dark" value={inviteUrl} disabled readOnly />
+
+            <Button
+              className={`absolute h-[2.2rem] w-[5rem] ml-[19.7rem] rounded-sm hover:opacity-100 ${
+                copied ? "bg-[green]" : "bg-[#4A54CA]"
+              }`}
+              variant="primary"
+              onClick={onCopy}
+            >
+              <span>{copied ? "copied" : "copy"}</span>
             </Button>
           </div>
-          <Button
-            onClick={onNew}
-            disabled={isLoading}
-            variant="link"
-            size="sm"
-            className="text-xs text-zinc-500 mt-4"
-          >
-            Generate a new link
-            <RefreshCw className="w-4 h-4 ml-2" />
-          </Button>
+
+          <p className="text-[10px] mt-2">
+            Your invite link will never expire.{" "}
+            <span className="text-[#01A8FC]" onClick={onNew}>
+              Edit invite link
+            </span>
+            .
+          </p>
         </div>
       </DialogContent>
     </Dialog>
