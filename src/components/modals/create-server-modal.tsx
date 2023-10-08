@@ -3,7 +3,6 @@ import * as z from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import FileUpload from "../file-upload";
 import { Button } from "../ui/button";
@@ -24,9 +23,9 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 
+import { useModal } from "@/hooks/use-modal-store";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useModal } from "@/hooks/use-modal-store";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "server name is required" }),
