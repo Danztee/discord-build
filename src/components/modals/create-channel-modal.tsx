@@ -26,7 +26,7 @@ import { useModal } from "@/hooks/use-modal-store";
 import { ChannelType } from "@prisma/client";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
-import HashIcon from "../hash-icon";
+import { HashIcon } from "../custom-icon";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 const formSchema = z.object({
@@ -144,7 +144,7 @@ export const CreateChannelModal = () => {
                           </p>
                         </div>
 
-                        <RadioGroupItem value="VOICE" id="VOICE" />
+                        <RadioGroupItem value="AUDIO" id="AUDIO" />
                       </div>
                     </RadioGroup>
 
@@ -176,10 +176,18 @@ export const CreateChannelModal = () => {
             </div>
 
             <DialogFooter className="bg-[#2B2D31] px-6 py-4 flex items-center gap-2">
-              <p className="hover:underline text-sm">Cancel</p>
+              <Button
+                disabled={isLoading}
+                onClick={onClose}
+                variant="ghost"
+                className="hover:underline hover:bg-transparent"
+              >
+                Cancel
+              </Button>
               <Button
                 variant="primary"
                 className="rounded-sm"
+                disabled={isLoading}
                 // disabled={form?.formState?.defaultValues?.name === ""}
               >
                 Create Channel

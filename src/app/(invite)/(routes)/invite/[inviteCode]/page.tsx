@@ -41,6 +41,8 @@ const Page: React.FC<PageProps> = () => {
       const response = await axios.patch(
         `/api/servers/accept-invite/${params?.inviteCode}`
       );
+      const { data: server } = response;
+      router.push(`/server/${server.id}`);
     } catch (error: any) {
       console.log(error.response);
     } finally {
