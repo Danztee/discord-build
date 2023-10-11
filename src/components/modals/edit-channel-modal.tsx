@@ -25,7 +25,7 @@ import { Input } from "../ui/input";
 import { useModal } from "@/hooks/use-modal-store";
 import { ChannelType } from "@prisma/client";
 import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { HashIcon, VoiceIcon } from "../custom-icon";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { useEffect } from "react";
@@ -40,39 +40,40 @@ const formSchema = z.object({
   type: z.nativeEnum(ChannelType),
 });
 
-export const CreateChannelModal = () => {
+export const EditChannelModal = () => {
   const { isOpen, onClose, type, data } = useModal();
   const router = useRouter();
-  const params = useParams();
 
-  const isModalOpen = isOpen && type === "createChannel";
-  const { channelType } = data;
+  const isModalOpen = isOpen && type === "editChannel";
+  const { channel, server } = data;
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      type: channelType || ChannelType.TEXT,
+      type: channel?.type || ChannelType.TEXT,
     },
   });
 
   useEffect(() => {
-    if (channelType) form.setValue("type", channelType);
-    else form.setValue("type", ChannelType.TEXT);
-  }, [channelType, form]);
+    if (channel) {
+      form.setValue("name", channel.name);
+      form.setValue("type", channel.type);
+    }
+  }, [channel, form]);
 
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const url = qs.stringifyUrl({
-        url: `/api/channels`,
+        url: `/api/channels/${channel?.id}`,
         query: {
-          serverId: params?.serverId,
+          serverId: server?.id,
         },
       });
 
-      await axios.post(url, values);
+      await axios.patch(url, values);
 
       form.reset();
       router.refresh();
@@ -92,7 +93,7 @@ export const CreateChannelModal = () => {
       <DialogContent className="bg-[#313338] text-[#F2F3F5] p-0 overflow-hidden !w-[28rem]">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-[1.3rem] text-start font-bold">
-            Create Channel
+            Edit Channel
           </DialogTitle>
         </DialogHeader>
 
@@ -181,7 +182,7 @@ export const CreateChannelModal = () => {
                 disabled={isLoading}
                 // disabled={form?.formState?.defaultValues?.name === ""}
               >
-                Create Channel
+                Edit Channel
               </Button>
             </DialogFooter>
           </form>

@@ -30,7 +30,7 @@ const ServerSection: React.FC<ServerSectionProps> = ({
         <ActionTooltip label="Create Channel" side="top">
           <button
             className="text-zinc-400 hover:text-zinc-300 transition"
-            onClick={() => onOpen("createChannel")}
+            onClick={() => onOpen("createChannel", { channelType })}
           >
             <Plus className="h-4 w-4" />
           </button>

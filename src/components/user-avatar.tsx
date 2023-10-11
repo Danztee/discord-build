@@ -16,7 +16,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
   return (
     <Avatar className={cn("h-7 w-7 md:h-10 md:w-10", className)}>
       <AvatarImage src={src !== null ? src : undefined} />
-      <AvatarFallback>{username?.slice(0, 1)}</AvatarFallback>
+      <AvatarFallback>{username?.slice(0, 1).toUpperCase()}</AvatarFallback>
     </Avatar>
   );
 };
