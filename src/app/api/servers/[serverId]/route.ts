@@ -55,3 +55,38 @@ export async function DELETE(
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
+
+export async function GET(
+  req: Request,
+  { params }: { params: { serverId: string } }
+) {
+  try {
+    const profile = await currentProfile();
+
+    if (!profile) return new NextResponse("Unauthorized", { status: 401 });
+
+    const server = await db.server.findUnique({
+      where: {
+        id: params.serverId,
+        members: {
+          some: { profileId: profile.id },
+        },
+      },
+      include: {
+        channels: {
+          where: {
+            name: "general",
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
+      },
+    });
+
+    return NextResponse.json(server);
+  } catch (error) {
+    console.log("[SERVER_ID_GET]", error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}

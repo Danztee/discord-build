@@ -4,21 +4,23 @@ import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 
-const MeLayout = async ({
+const ChannelsLayout = async ({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: { serverId: string };
+  params: { id: string };
 }) => {
   const profile = await currentProfile();
 
   if (!profile) return redirect("/login");
 
-  if (params.serverId !== "%40me") {
+  const serverId = params.id[0];
+
+  if (serverId !== "%40me") {
     const server = await db.server.findUnique({
       where: {
-        id: params.serverId,
+        id: serverId,
         members: {
           some: {
             profileId: profile.id,
@@ -33,8 +35,8 @@ const MeLayout = async ({
   return (
     <div className="h-full">
       <div className="hidden md:flex h-full w-60 z-20 flex-col fixed inset-y-0">
-        {params.serverId !== "%40me" ? (
-          <ServerSidebar serverId={params.serverId} />
+        {serverId !== "%40me" ? (
+          <ServerSidebar serverId={serverId} />
         ) : (
           <ConversationSidebar />
         )}
@@ -44,4 +46,4 @@ const MeLayout = async ({
   );
 };
 
-export default MeLayout;
+export default ChannelsLayout;

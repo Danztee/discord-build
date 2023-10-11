@@ -31,8 +31,10 @@ const ServerChannel: React.FC<ServerChannelProps> = ({
 
   const Icon = iconMap[channel.type];
 
+  const serverId = params?.id[0];
+
   const onClick = () => {
-    router.push(`/channels/${params?.serverId}/${channel.id}`);
+    router.push(`/channels/${serverId}/${channel.id}`);
   };
 
   const onAction = (e: React.MouseEvent, action: ModalType) => {
@@ -40,20 +42,21 @@ const ServerChannel: React.FC<ServerChannelProps> = ({
     onOpen(action, { channel, server });
   };
 
+  const channelId = params?.id[1];
+
   return (
     <button
       onClick={onClick}
       className={cn(
         "group p-2 rounded-md flex items-center gap-x-2 w-full hover:bg-zinc-700/50 transition mb-1",
-        params?.channelId === channel.id && "text-zinc-700"
+        channelId === channel.id && "bg-[#404249]"
       )}
     >
       <Icon className="flex-shrink-0 w-5 h-5 text-[#80848E]" />
       <p
         className={cn(
           "line-clamp-1 font-semibold text-sm text-[#949BA4] group-hover:text-zinc-300 transition",
-          params?.channelId === channel.id &&
-            "text-zinc-300 group-hover:text-white"
+          channelId === channel.id && "text-zinc-300 group-hover:text-white"
         )}
       >
         {channel.name}
