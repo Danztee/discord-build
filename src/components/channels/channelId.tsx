@@ -1,28 +1,53 @@
-"use client";
-
 import { Channel } from "@prisma/client";
 import { redirect, useParams, usePathname } from "next/navigation";
 import React from "react";
+import ChatHeader from "../chat/chat-header";
+import { db } from "@/lib/db";
+import { currentProfile } from "@/lib/current-profile";
 
 type ChannelIdProps = {
-  initialChannel?: Channel;
-  serverId?: string;
+  initialChannel: Channel;
+  serverId: string;
+  channelId: string;
 };
 
-const ChannelId: React.FC<ChannelIdProps> = ({ initialChannel, serverId }) => {
-  // if (initialChannel?.name !== "general") return null;
+const ChannelId: React.FC<ChannelIdProps> = async ({
+  serverId,
+  initialChannel,
+  channelId,
+}) => {
+  const profile = await currentProfile();
 
-  const pathname = usePathname();
-  const params = useParams();
+  if (!profile) return redirect("/login");
 
-  const pathnameLength = pathname?.split("/").length;
+  const channel = await db.channel.findUnique({
+    where: {
+      id: channelId,
+    },
+  });
 
-  if (pathnameLength === 3 && initialChannel?.name === "general") {
-    return redirect(`/channels/${serverId}/${initialChannel?.id}`);
+  const member = await db.member.findFirst({
+    where: {
+      serverId,
+      profileId: profile.id,
+    },
+  });
+
+  if (!channel || !member) redirect("/");
+
+  if (initialChannel) {
+    console.log("initial channel");
+    // redirect(`/channels/${serverId}/${initialChannel?.id}`);
   }
 
-  // return redirect(`/channels/${serverId}/${initialChannel.id}`);
-
-  return <div>channel id page</div>;
+  return (
+    <div className="bg-[#313338] flex flex-col h-full">
+      <ChatHeader
+        name={channel.name}
+        serverId={channel.serverId}
+        type="channel"
+      />
+    </div>
+  );
 };
 export default ChannelId;

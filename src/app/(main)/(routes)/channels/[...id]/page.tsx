@@ -1,43 +1,55 @@
-"use client";
-
 import ChannelId from "@/components/channels/channelId";
 import Me from "@/components/channels/me";
+import { currentProfile } from "@/lib/current-profile";
+import { db } from "@/lib/db";
+import { Channel } from "@prisma/client";
 import axios from "axios";
-import { useParams } from "next/navigation";
+import { redirect, useParams, usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
-const Page = () => {
-  const [initialChannel, setInitialChannel] = useState();
-  const params = useParams() as { id: string };
+const Page = async ({ params }: { params: { id: string[] } }) => {
+  console.log(params);
+
+  const profile = await currentProfile();
+
   const serverId = params.id[0];
+  const channelId = params.id[1];
 
-  const getChannel = useCallback(async () => {
-    try {
-      const res = await axios.get(`/api/servers/${serverId}`);
-      const { data } = res;
-      setInitialChannel(data.channels[0]);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [serverId]);
+  if (serverId === "%40me") {
+    return <Me />;
+  }
 
-  useEffect(() => {
-    if (serverId === "%40me") {
-      console.log("direct message page");
-    } else {
-      console.log("channel page");
-      getChannel();
-    }
-  }, [getChannel, serverId]);
+  const server = await db.server.findUnique({
+    where: {
+      id: serverId,
+      members: {
+        some: { profileId: profile.id },
+      },
+    },
+    include: {
+      channels: {
+        where: {
+          name: "general",
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
+    },
+  });
+
+  const initialChannel = server?.channels[0];
+
+  if (initialChannel?.name !== "general") {
+    return null;
+  }
 
   return (
-    <>
-      {serverId === "%40me" ? (
-        <Me />
-      ) : (
-        <ChannelId initialChannel={initialChannel} serverId={serverId} />
-      )}
-    </>
+    <ChannelId
+      initialChannel={initialChannel}
+      serverId={serverId}
+      channelId={channelId}
+    />
   );
 };
 
