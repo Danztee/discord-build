@@ -5,6 +5,7 @@ import { Open_Sans, Noto_Sans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import ModalProvider from "@/components/providers/modal-provider";
 import { Toaster } from "react-hot-toast";
+import { SocketProvider } from "@/components/providers/socket-provider";
 
 const font = Noto_Sans({ subsets: ["latin"], weight: "400" });
 
@@ -27,9 +28,11 @@ export default function RootLayout({
           enableSystem={false}
           storageKey="discord-theme"
         >
-          <ModalProvider />
-          <Toaster />
-          {children}
+          <SocketProvider>
+            <ModalProvider />
+            <Toaster />
+            {children}
+          </SocketProvider>
         </ThemeProvider>
       </body>
     </html>

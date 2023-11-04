@@ -1,6 +1,6 @@
-import { db } from "./db";
+import { db } from "@/lib/db";
 
-export const createOrGetConversation = async (
+export const getOrCreateConversation = async (
   memberOneId: string,
   memberTwoId: string
 ) => {
@@ -9,15 +9,17 @@ export const createOrGetConversation = async (
     (await findConversation(memberTwoId, memberOneId));
 
   if (!conversation) {
-    await createNewConversation(memberOneId, memberTwoId);
+    conversation = await createNewConversation(memberOneId, memberTwoId);
   }
+
+  return conversation;
 };
 
 const findConversation = async (memberOneId: string, memberTwoId: string) => {
   try {
-    await db.conversation.findFirst({
+    return await db.conversation.findFirst({
       where: {
-        AND: [{ memberOneId }, { memberTwoId }],
+        AND: [{ memberOneId: memberOneId }, { memberTwoId: memberTwoId }],
       },
       include: {
         memberOne: {
@@ -32,7 +34,7 @@ const findConversation = async (memberOneId: string, memberTwoId: string) => {
         },
       },
     });
-  } catch (error) {
+  } catch {
     return null;
   }
 };
@@ -42,12 +44,11 @@ const createNewConversation = async (
   memberTwoId: string
 ) => {
   try {
-    await db.conversation.create({
+    return await db.conversation.create({
       data: {
         memberOneId,
         memberTwoId,
       },
-
       include: {
         memberOne: {
           include: {
@@ -61,7 +62,7 @@ const createNewConversation = async (
         },
       },
     });
-  } catch (error) {
+  } catch {
     return null;
   }
 };

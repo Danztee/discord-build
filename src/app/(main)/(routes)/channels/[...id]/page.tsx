@@ -8,15 +8,14 @@ import { redirect, useParams, usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 const Page = async ({ params }: { params: { id: string[] } }) => {
-  console.log(params);
-
   const profile = await currentProfile();
 
   const serverId = params.id[0];
   const channelId = params.id[1];
 
   if (serverId === "%40me") {
-    return <Me />;
+    const memberId = params.id[1];
+    return <Me serverId={serverId} memberId={memberId} />;
   }
 
   const server = await db.server.findUnique({
@@ -43,6 +42,8 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
   if (initialChannel?.name !== "general") {
     return null;
   }
+
+  if (!channelId && !serverId) return;
 
   return (
     <ChannelId
