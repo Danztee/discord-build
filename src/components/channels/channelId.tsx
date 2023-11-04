@@ -7,19 +7,13 @@ import { currentProfile } from "@/lib/current-profile";
 import ChatInput from "../chat/chat-input";
 
 type ChannelIdProps = {
-  initialChannel: Channel;
   serverId: string;
   channelId: string;
 };
 
-const ChannelId: React.FC<ChannelIdProps> = async ({
-  serverId,
-  initialChannel,
-  channelId,
-}) => {
+const ChannelId: React.FC<ChannelIdProps> = async ({ serverId, channelId }) => {
   if (!channelId || !serverId) return;
 
-  console.log(channelId, serverId, "from chan id tsx");
   const profile = await currentProfile();
 
   if (!profile) return redirect("/login");
@@ -38,11 +32,6 @@ const ChannelId: React.FC<ChannelIdProps> = async ({
   });
 
   if (!channel || !member) redirect("/");
-
-  if (initialChannel) {
-    console.log("initial channel");
-    // redirect(`/channels/${serverId}/${initialChannel?.id}`);
-  }
 
   return (
     <div className="bg-[#313338] flex flex-col h-full">

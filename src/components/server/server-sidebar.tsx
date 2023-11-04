@@ -34,8 +34,6 @@ const ServerSidebar: React.FC<ServerSidebarProps> = async ({ serverId }) => {
 
   if (!profile) return redirect("/login");
 
-  console.log(serverId, "from serverID sidebar");
-
   const server = await db.server.findUnique({
     where: {
       id: serverId,

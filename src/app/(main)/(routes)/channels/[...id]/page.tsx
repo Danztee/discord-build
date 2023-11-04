@@ -2,10 +2,7 @@ import ChannelId from "@/components/channels/channelId";
 import Me from "@/components/channels/me";
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
-import { Channel } from "@prisma/client";
-import axios from "axios";
-import { redirect, useParams, usePathname } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { redirect } from "next/navigation";
 
 const Page = async ({ params }: { params: { id: string[] } }) => {
   const profile = await currentProfile();
@@ -38,20 +35,17 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
   });
 
   const initialChannel = server?.channels[0];
-
   if (initialChannel?.name !== "general") {
     return null;
   }
 
+  if (channelId === undefined) {
+    redirect(`/channels/${serverId}/${initialChannel?.id}`);
+  }
+
   if (!channelId && !serverId) return;
 
-  return (
-    <ChannelId
-      initialChannel={initialChannel}
-      serverId={serverId}
-      channelId={channelId}
-    />
-  );
+  return <ChannelId serverId={serverId} channelId={channelId} />;
 };
 
 export default Page;

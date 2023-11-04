@@ -1,7 +1,10 @@
 import { currentProfile } from "@/lib/current-profile";
+import { currentProfilePages } from "@/lib/current-profile-pages";
 import { db } from "@/lib/db";
 import { NextApiResponseServerIo } from "@/types";
 import { NextApiRequest } from "next";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,12 +14,12 @@ export default async function handler(
     return res.status(405).json({ message: "Method not allowed" });
   }
 
+  console.log("in messages route");
+
   try {
-    const profile = await currentProfile();
+    const profile = await currentProfilePages(req);
     const { content, fileUrl } = req.body;
     const { serverId, channelId } = req.query;
-
-    console.log(profile);
 
     if (!profile) return res.status(401).json({ error: "unauthorized" });
 
@@ -37,7 +40,6 @@ export default async function handler(
           },
         },
       },
-
       include: {
         members: true,
       },
@@ -51,7 +53,6 @@ export default async function handler(
         serverId: serverId as string,
       },
     });
-
     if (!channel) return res.status(401).json({ error: "channel not found" });
 
     const member = server.members.find(
@@ -77,7 +78,6 @@ export default async function handler(
     });
 
     const channelKey = `chat:${channelId}:messages`;
-
     res?.socket?.server?.io.emit(channelKey, message);
   } catch (error) {
     console.log(`messages_POST: ${error}`);
