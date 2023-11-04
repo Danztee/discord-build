@@ -1,10 +1,7 @@
-import { currentProfile } from "@/lib/current-profile";
 import { currentProfilePages } from "@/lib/current-profile-pages";
 import { db } from "@/lib/db";
 import { NextApiResponseServerIo } from "@/types";
 import { NextApiRequest } from "next";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(
   req: NextApiRequest,
@@ -78,9 +75,12 @@ export default async function handler(
     });
 
     const channelKey = `chat:${channelId}:messages`;
+
     res?.socket?.server?.io.emit(channelKey, message);
+
+    return res.status(200).json(message);
   } catch (error) {
-    console.log(`messages_POST: ${error}`);
+    console.log(`MESSAGES_POST: ${error}`);
     return res.status(500).json({ message: "Internal error" });
   }
 }

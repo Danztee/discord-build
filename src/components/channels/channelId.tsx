@@ -5,6 +5,7 @@ import ChatHeader from "../chat/chat-header";
 import { db } from "@/lib/db";
 import { currentProfile } from "@/lib/current-profile";
 import ChatInput from "../chat/chat-input";
+import ChatMessages from "../chat/chat-messages";
 
 type ChannelIdProps = {
   serverId: string;
@@ -40,7 +41,7 @@ const ChannelId: React.FC<ChannelIdProps> = async ({ serverId, channelId }) => {
         serverId={channel.serverId}
         type="channel"
       />
-      <div className="flex-1">future messages</div>
+      <ChatMessages />
       <ChatInput
         name={channel.name}
         type="channel"
