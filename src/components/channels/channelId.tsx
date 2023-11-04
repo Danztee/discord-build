@@ -41,7 +41,17 @@ const ChannelId: React.FC<ChannelIdProps> = async ({ serverId, channelId }) => {
         serverId={channel.serverId}
         type="channel"
       />
-      <ChatMessages />
+      <ChatMessages
+        name={channel.name}
+        member={member}
+        chatId={channel.id}
+        apiUrl="/api/messages"
+        socketUrl="/api/socket/messages"
+        socketQuery={{ channelId: channel.id, serverId: channel.serverId }}
+        paramKey="channelId"
+        paramValue={channel.id}
+        type="channel"
+      />
       <ChatInput
         name={channel.name}
         type="channel"

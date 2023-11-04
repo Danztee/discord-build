@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import ModalProvider from "@/components/providers/modal-provider";
 import { Toaster } from "react-hot-toast";
 import { SocketProvider } from "@/components/providers/socket-provider";
+import { QueryProvider } from "@/components/providers/query-provider";
 
 const font = Noto_Sans({ subsets: ["latin"], weight: "400" });
 
@@ -31,7 +32,7 @@ export default function RootLayout({
           <SocketProvider>
             <ModalProvider />
             <Toaster />
-            {children}
+            <QueryProvider>{children}</QueryProvider>
           </SocketProvider>
         </ThemeProvider>
       </body>
