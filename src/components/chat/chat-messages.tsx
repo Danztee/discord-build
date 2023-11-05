@@ -5,12 +5,17 @@ import ChatWelcome from "./chat-welcome";
 import { useChatQuery } from "@/hooks/use-chat-query";
 import { Loader2, ServerCrash } from "lucide-react";
 import { Fragment } from "react";
+import ChatItem from "./chat-item";
+import { format } from "date-fns";
+import { useChatSocket } from "@/hooks/use-chat.socket";
+
+const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
 type MessageWithMemberWithProfile = Message & {
-  member: Member;
-  profile: Profile;
+  member: Member & {
+    profile: Profile;
+  };
 };
-
 type ChatMessagesProps = {
   name: string;
   member: Member;
@@ -35,6 +40,8 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   type,
 }) => {
   const queryKey = `chat:${chatId}`;
+  const addKey = `chat:${chatId}:messages`;
+  const updateKey = `chat:${chatId}:messages:update`;
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useChatQuery({
@@ -43,6 +50,8 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
       paramKey,
       paramValue,
     });
+
+  useChatSocket({ queryKey, addKey, updateKey });
 
   if (status === "pending") {
     return (
@@ -71,7 +80,19 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         {data?.pages?.map((messages, index) => (
           <Fragment key={index}>
             {messages.items.map((message: MessageWithMemberWithProfile) => (
-              <div key={message.id}>{message.content}</div>
+              <ChatItem
+                key={message.id}
+                id={message.id}
+                currentMember={member}
+                member={message.member}
+                content={message.content}
+                fileUrl={message.fileUrl}
+                deleted={message.deleted}
+                timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
+                isUpdated={message.updatedAt !== message.createdAt}
+                socketUrl={socketUrl}
+                socketQuery={socketQuery}
+              />
             ))}
           </Fragment>
         ))}

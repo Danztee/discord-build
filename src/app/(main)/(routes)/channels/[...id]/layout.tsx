@@ -17,19 +17,23 @@ const ChannelsLayout = async ({
 
   const serverId = params.id[0];
 
-  if (serverId !== "%40me") {
-    const server = await db.server.findUnique({
-      where: {
-        id: serverId,
-        members: {
-          some: {
-            profileId: profile.id,
+  if (serverId && serverId !== "%40me") {
+    try {
+      const server = await db.server.findUnique({
+        where: {
+          id: serverId,
+          members: {
+            some: {
+              profileId: profile.id,
+            },
           },
         },
-      },
-    });
+      });
 
-    if (!server) return redirect("/");
+      if (!server) return redirect("/");
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (

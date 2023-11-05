@@ -10,7 +10,7 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
   const serverId = params.id[0];
   const channelId = params.id[1];
 
-  if (serverId === "%40me") {
+  if (serverId && serverId === "%40me") {
     const memberId = params.id[1];
     return <Me serverId={serverId} memberId={memberId} />;
   }

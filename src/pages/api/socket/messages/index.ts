@@ -11,8 +11,6 @@ export default async function handler(
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  console.log("in messages route");
-
   try {
     const profile = await currentProfilePages(req);
     const { content, fileUrl } = req.body;
