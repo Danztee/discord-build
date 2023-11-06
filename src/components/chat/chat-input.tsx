@@ -71,6 +71,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ apiUrl, query, name, type }) => {
                     <Plus className="text-[#313338]" />
                   </button>
                   <Input
+                    autoComplete="off"
                     disabled={isLoading}
                     className="px-14 py-6 bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-200"
                     placeholder={`message ${

@@ -64,11 +64,12 @@ export const CreateChannelModal = () => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const serverId = params?.id[0];
     try {
       const url = qs.stringifyUrl({
         url: `/api/channels`,
         query: {
-          serverId: params?.serverId,
+          serverId,
         },
       });
 
