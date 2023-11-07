@@ -4,7 +4,13 @@ import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 
-const Page = async ({ params }: { params: { id: string[] } }) => {
+const Page = async ({
+  params,
+  searchParams,
+}: {
+  params: { id: string[] };
+  searchParams: { video: boolean };
+}) => {
   const profile = await currentProfile();
 
   const serverId = params.id[0];
@@ -12,7 +18,9 @@ const Page = async ({ params }: { params: { id: string[] } }) => {
 
   if (serverId && serverId === "%40me") {
     const memberId = params.id[1];
-    return <Me serverId={serverId} memberId={memberId} />;
+    return (
+      <Me serverId={serverId} memberId={memberId} searchParams={searchParams} />
+    );
   }
 
   const server = await db.server.findUnique({

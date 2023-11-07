@@ -12,6 +12,7 @@ import { DeleteChannelModal } from "../modals/delete-channel-modal";
 import { EditChannelModal } from "../modals/edit-channel-modal";
 import { MessageFileModal } from "../modals/message-file-modal";
 import { DeleteMessageModal } from "../modals/delete-message-modal";
+import { AddProfilePhotoModal } from "../modals/add-profile-photo-modal";
 
 const ModalProvider = () => {
   const [isClient, setIsClient] = useState(false);
@@ -24,6 +25,7 @@ const ModalProvider = () => {
 
   return (
     <>
+      <AddProfilePhotoModal />
       <CreateServerModal />
       <InviteModal />
       <EditServerModal />

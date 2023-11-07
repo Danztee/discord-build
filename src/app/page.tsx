@@ -1,13 +1,34 @@
 "use client";
 
+import { useModal } from "@/hooks/use-modal-store";
+import { currentProfile } from "@/lib/current-profile";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
-  const router = useRouter();
+  // const router = useRouter();
+  const { onOpen } = useModal();
 
-  setTimeout(() => {
-    router.push("/channels/@me");
-  }, 1000);
+  useEffect(() => {
+    onOpen("addProfilePhoto");
+  }, [onOpen]);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const profile = await currentProfile();
+  //     console.log(profile);
+
+  //     if (!profile.imageUrl) {
+  //       onOpen("addProfilePhoto");
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [onOpen]);
+
+  // setTimeout(() => {
+  //   router.push("/channels/@me");
+  // }, 500);
 
   return (
     <main>
