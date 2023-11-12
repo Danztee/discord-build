@@ -29,7 +29,7 @@ const Page: React.FC<PageProps> = () => {
         setServer(response.data);
       } catch (error: any) {
         console.log(error.data);
-        router.push("/");
+        // router.push("/");
       }
     }
     fetchData();
