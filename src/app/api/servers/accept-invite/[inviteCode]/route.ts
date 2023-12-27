@@ -31,7 +31,7 @@ export async function PATCH(
         status: 400,
       });
 
-    await db.server.update({
+    const server = await db.server.update({
       where: {
         inviteCode: params.inviteCode,
       },
@@ -42,7 +42,7 @@ export async function PATCH(
       },
     });
 
-    return NextResponse.json("User successfully added to the server");
+    return NextResponse.json(server);
   } catch (error) {
     console.log("[ACCEPT_INVITE]", error);
     return new NextResponse("Internal Error", { status: 500 });

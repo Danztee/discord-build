@@ -51,8 +51,6 @@ export const CreateServerModal = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const res = await axios.post("/api/servers", values);
-      console.log(res);
-
       form.reset();
       router.refresh();
       onClose();
@@ -135,7 +133,11 @@ export const CreateServerModal = () => {
             </div>
 
             <DialogFooter className="bg-[#F2F3F5] px-6 py-4">
-              <Button variant="primary" className="w-[6rem]">
+              <Button
+                variant="primary"
+                className="w-[6rem]"
+                loading={isLoading}
+              >
                 Create
               </Button>
             </DialogFooter>

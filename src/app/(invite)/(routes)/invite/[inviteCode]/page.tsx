@@ -29,7 +29,6 @@ const Page: React.FC<PageProps> = () => {
         setServer(response.data);
       } catch (error: any) {
         console.log(error.data);
-        // router.push("/");
       }
     }
     fetchData();
@@ -42,7 +41,7 @@ const Page: React.FC<PageProps> = () => {
         `/api/servers/accept-invite/${params?.inviteCode}`
       );
       const { data: server } = response;
-      router.push(`/server/${server.id}`);
+      router.push(`/channels/${server.id}`);
     } catch (error: any) {
       console.log(error.response);
     } finally {
@@ -79,6 +78,7 @@ const Page: React.FC<PageProps> = () => {
           className="w-full"
           variant="primary"
           onClick={acceptInvite}
+          disabled={loading}
         >
           Accept Invite
         </Button>

@@ -179,6 +179,7 @@ export const CreateChannelModal = () => {
               <Button
                 variant="primary"
                 className="rounded-sm"
+                loading={isLoading}
                 disabled={isLoading}
                 // disabled={form?.formState?.defaultValues?.name === ""}
               >

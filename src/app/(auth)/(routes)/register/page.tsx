@@ -115,7 +115,12 @@ const Page = () => {
             </div>
 
             {/* Register Button */}
-            <Button type="submit" variant="primary" loading={loading}>
+            <Button
+              type="submit"
+              variant="primary"
+              loading={loading}
+              disabled={loading}
+            >
               Register
             </Button>
 

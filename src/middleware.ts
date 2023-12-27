@@ -3,30 +3,35 @@ import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, protocol, host } = request.nextUrl;
   const req = request;
   const token = await getToken({ req, secret: process.env.NEXT_AUTH_SECRET });
 
+  const isAuthenticationPath = /^(\/(login|register))$/.test(pathname);
+
+  if (token && isAuthenticationPath) {
+    return NextResponse.redirect(new URL(`${protocol}//${host}/`));
+  }
+
+  if (!token && isAuthenticationPath) {
+    return NextResponse.next();
+  }
+
   if (!token) {
-    return NextResponse.rewrite(new URL("/login", request.url));
+    if (pathname !== "/") {
+      return NextResponse.redirect(
+        new URL(`${protocol}//${host}/login?next=${pathname.slice(1)}`)
+      );
+    } else {
+      return NextResponse.redirect(new URL(`${protocol}//${host}/login`));
+    }
   }
 
-  if (!token && pathname !== "/login") {
-    return NextResponse.rewrite(new URL("/login", request.url));
+  if (token) {
+    return NextResponse.next();
   }
-
-  if (token) return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    "/((?!api|login|register|_next/static|_next/image|favicon.ico).*)",
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

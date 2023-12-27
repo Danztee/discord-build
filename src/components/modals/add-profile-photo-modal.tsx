@@ -48,7 +48,7 @@ export const AddProfilePhotoModal = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const res = await axios.post("/api/users", values);
+      const res = await axios.patch("/api/users", values);
       console.log(res);
 
       form.reset();
@@ -101,7 +101,12 @@ export const AddProfilePhotoModal = () => {
             </div>
 
             <DialogFooter className="bg-[#2B2D31] px-6 py-4">
-              <Button variant="primary" className="w-[6rem]">
+              <Button
+                variant="primary"
+                className="w-[6rem]"
+                loading={isLoading}
+                disabled={isLoading}
+              >
                 Add
               </Button>
             </DialogFooter>

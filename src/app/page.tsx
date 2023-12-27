@@ -1,34 +1,30 @@
 "use client";
 
 import { useModal } from "@/hooks/use-modal-store";
-import { currentProfile } from "@/lib/current-profile";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Home() {
-  // const router = useRouter();
+  const router = useRouter();
   const { onOpen } = useModal();
 
   useEffect(() => {
-    onOpen("addProfilePhoto");
-  }, [onOpen]);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const profile = await currentProfile();
-  //     console.log(profile);
-
-  //     if (!profile.imageUrl) {
-  //       onOpen("addProfilePhoto");
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [onOpen]);
-
-  // setTimeout(() => {
-  //   router.push("/channels/@me");
-  // }, 500);
+    async function fetchData() {
+      try {
+        const { data } = await axios.get("/api/users");
+        const user = data;
+        if (!user.imageUrl) {
+          onOpen("addProfilePhoto");
+        } else {
+          router.push("/channels/@me");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, [onOpen, router]);
 
   return (
     <main>

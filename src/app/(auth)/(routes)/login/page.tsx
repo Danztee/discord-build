@@ -1,39 +1,52 @@
 "use client";
 
+// http://localhost:3000/invite/cd44e797-2d6a-4886-ac36-2119b1762453
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React, { useState } from "react";
 
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Page = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
 
+  const search = searchParams?.get("next");
+  const redirect_url = `/${search}`;
+
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    const res = await signIn("credentials", {
-      ...formData,
-      redirect: false,
-      callbackUrl: "/",
-    });
-
-    if (res?.error) {
-      alert(res.error);
-    } else {
-      alert("logged in successfully");
-      router.push("/");
-      router.refresh();
+    try {
+      const res = await signIn("credentials", {
+        ...formData,
+        redirect: true,
+        callbackUrl: redirect_url ? redirect_url : "/",
+      });
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
     }
 
-    setLoading(false);
+    // if (res?.error) {
+    //   alert(res.error);
+    // } else {
+    //   alert("logged in successfully");
+    //   router.push(redirect_url ? redirect_url : "/");
+
+    //   // router.refresh();
+    // }
+
+    // setLoading(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
