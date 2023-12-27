@@ -48,11 +48,9 @@ export const AddProfilePhotoModal = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const res = await axios.patch("/api/users", values);
-      console.log(res);
-
+      await axios.patch("/api/users", values);
       form.reset();
-      router.refresh();
+      router.push("/channels/@me");
       onClose();
     } catch (error) {
       console.log(error);
@@ -62,6 +60,7 @@ export const AddProfilePhotoModal = () => {
   const handleClose = () => {
     form.reset();
     onClose();
+    router.push("/channels/@me");
   };
 
   return (

@@ -21,7 +21,7 @@ const Page: React.FC<PageProps> = () => {
 
   useEffect(() => {
     async function fetchData() {
-      if (!params?.inviteCode) return;
+      if (!params?.inviteCode) return router.push("/");
       try {
         const response = await axios.get(
           `/api/servers/server-with-invite-code/${params.inviteCode}`
@@ -44,6 +44,8 @@ const Page: React.FC<PageProps> = () => {
       router.push(`/channels/${server.id}`);
     } catch (error: any) {
       console.log(error.response);
+      const server_id = error.response.data;
+      router.push(`/channels/${server_id}`);
     } finally {
       setLoading(false);
     }

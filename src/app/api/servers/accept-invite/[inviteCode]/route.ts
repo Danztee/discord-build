@@ -27,7 +27,7 @@ export async function PATCH(
     });
 
     if (existingServer)
-      return new NextResponse("User already exists in this server", {
+      return new NextResponse(existingServer.id, {
         status: 400,
       });
 
