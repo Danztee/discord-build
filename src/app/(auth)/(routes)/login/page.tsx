@@ -1,6 +1,5 @@
 "use client";
 
-// http://localhost:3000/invite/cd44e797-2d6a-4886-ac36-2119b1762453
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -29,7 +28,7 @@ const Page = () => {
       const res = await signIn("credentials", {
         ...formData,
         redirect: false,
-        callbackUrl: redirect_url ? redirect_url : "/",
+        callbackUrl: search !== null ? redirect_url : "/",
       });
 
       if (res?.error) {
