@@ -28,25 +28,21 @@ const Page = () => {
     try {
       const res = await signIn("credentials", {
         ...formData,
-        redirect: true,
-        callbackUrl: redirect_url ? redirect_url : "/",
+        redirect: false,
+        // callbackUrl: redirect_url ? redirect_url : "/",
       });
+
+      if (res?.error) {
+        alert(res.error);
+      } else {
+        alert("logged in successfully");
+        router.push(redirect_url ? redirect_url : "/");
+      }
     } catch (err) {
       console.log(err);
     } finally {
       setLoading(false);
     }
-
-    // if (res?.error) {
-    //   alert(res.error);
-    // } else {
-    //   alert("logged in successfully");
-    //   router.push(redirect_url ? redirect_url : "/");
-
-    //   // router.refresh();
-    // }
-
-    // setLoading(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
