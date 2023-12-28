@@ -29,14 +29,14 @@ const Page = () => {
       const res = await signIn("credentials", {
         ...formData,
         redirect: false,
-        // callbackUrl: redirect_url ? redirect_url : "/",
+        callbackUrl: redirect_url ? redirect_url : "/",
       });
 
       if (res?.error) {
         alert(res.error);
       } else {
         alert("logged in successfully");
-        router.push(redirect_url ? redirect_url : "/");
+        router.push(search !== null ? redirect_url : "/");
       }
     } catch (err) {
       console.log(err);
