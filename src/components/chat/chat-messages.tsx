@@ -128,3 +128,5 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 };
 
 export default ChatMessages;
+
+export const dynamic = "force-dynamic";

@@ -85,3 +85,5 @@ const ChannelId: React.FC<ChannelIdProps> = async ({ serverId, channelId }) => {
 };
 
 export default ChannelId;
+
+export const dynamic = "force-dynamic";

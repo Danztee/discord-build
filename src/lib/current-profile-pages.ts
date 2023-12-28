@@ -18,3 +18,5 @@ export const currentProfilePages = async (req: NextApiRequest) => {
   const session = await getServerSession(req, res, authOptions);
   return session.user;
 };
+
+export const dynamic = "force-dynamic";

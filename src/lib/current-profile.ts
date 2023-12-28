@@ -5,3 +5,5 @@ export const currentProfile = async () => {
   const session = await getServerSession(authOptions);
   return session.user;
 };
+
+export const dynamic = "force-dynamic";
